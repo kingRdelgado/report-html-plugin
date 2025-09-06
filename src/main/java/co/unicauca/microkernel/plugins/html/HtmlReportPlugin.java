@@ -3,10 +3,11 @@ package co.unicauca.microkernel.plugins.html;
 import co.unicauca.microkernel.common.entities.Project;
 import co.unicauca.microkernel.common.interfaces.IReportPlugin;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Plugin que genera un reporte en formato HTML para los proyectos de grado.
+ * Plugin para generar reportes en formato HTML
  */
 public class HtmlReportPlugin implements IReportPlugin {
 
@@ -14,33 +15,45 @@ public class HtmlReportPlugin implements IReportPlugin {
     public String generateReport(List<Project> data) {
         StringBuilder html = new StringBuilder();
 
-        html.append("<html><head><title>Reporte de Proyectos</title></head><body>");
-        html.append("<h1>Listado de Proyectos de Grado</h1>");
-        html.append("<table border='1'>");
-        html.append("<tr>")
-            .append("<th>ID</th>")
-            .append("<th>Nombre Proyecto</th>")
-            .append("<th>Fecha Aprobación</th>")
-            .append("<th>Estudiantes</th>")
-            .append("<th>Profesor</th>")
-            .append("<th>Tipo</th>")
-            .append("<th>Programa</th>")
-            .append("</tr>");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        html.append("<!DOCTYPE html>\n");
+        html.append("<html lang=\"es\">\n");
+        html.append("<head>\n");
+        html.append("   <title>Reporte de Proyectos de Grado</title>\n");
+        html.append("</head>\n");
+        html.append("<body>\n");
+        html.append("    <h1>Reporte de Proyectos de Grado</h1>\n");
+        html.append("    <table border=\"1\">\n");
+        html.append("        <thead>\n");
+        html.append("            <tr>\n");
+        html.append("                <th>ID</th>\n");
+        html.append("                <th>Nombre del Proyecto</th>\n");
+        html.append("                <th>Fecha aprobación formato A</th>\n");
+        html.append("                <th>Estudiante(s)</th>\n");
+        html.append("                <th>Profesor</th>\n");
+        html.append("                <th>Tipo</th>\n");
+        html.append("                <th>Programa</th>\n");
+        html.append("            </tr>\n");
+        html.append("        </thead>\n");
+        html.append("        <tbody>\n");
 
         for (Project p : data) {
-            html.append("<tr>")
-                .append("<td>").append(p.getID()).append("</td>")
-                .append("<td>").append(p.getNomProyecto()).append("</td>")
-                .append("<td>").append(p.getFechaAprobacion()).append("</td>")
-                .append("<td>").append(String.join(", ", p.getEstudiante())).append("</td>")
-                .append("<td>").append(p.getProfesor()).append("</td>")
-                .append("<td>").append(p.getTipo()).append("</td>")
-                .append("<td>").append(p.getPrograma()).append("</td>")
-                .append("</tr>");
+            html.append("            <tr>\n");
+            html.append("                <td>").append(p.getID()).append("</td>\n");
+            html.append("                <td>").append(p.getNomProyecto()).append("</td>\n");
+            html.append("                <td>").append(p.getFechaAprobacion().format(formatter)).append("</td>\n");
+            html.append("                <td>").append(String.join(", ", p.getEstudiante())).append("</td>\n");
+            html.append("                <td>").append(p.getProfesor()).append("</td>\n");
+            html.append("                <td>").append(p.getTipo()).append("</td>\n");
+            html.append("                <td>").append(p.getPrograma()).append("</td>\n");
+            html.append("            </tr>\n");
         }
 
-        html.append("</table>");
-        html.append("</body></html>");
+        html.append("        </tbody>\n");
+        html.append("    </table>\n");
+        html.append("</body>\n");
+        html.append("</html>\n");
 
         return html.toString();
     }
